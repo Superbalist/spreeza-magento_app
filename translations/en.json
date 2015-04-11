@@ -30,6 +30,10 @@
     },
     "package": "magento"
   },
+  "close_button": {
+    "value": "Close",
+    "title": "Close Window"
+  },
   "profile": {
     "customer_since": {
       "title": "When the customer first became a customer",
@@ -130,6 +134,30 @@
     "total": {
       "title": "The total amount of the order",
       "value": "Total"
+    },
+    "tracking_info": {
+      "title": "Package tracking information",
+      "value": "Tracking information"
+    },
+    "tracking_number": {
+      "title": "The package tracking number",
+      "value": "Tracking Number"
+    },
+    "additional_tracking_number": {
+      "title": "The package additional tracking number",
+      "value": "Additional Tracking Number"
+    },
+    "otd_tracking_url": {
+      "title": "Track the pacakge using OTD",
+      "value": "Track order using OTD"
+    },
+    "sapo_tracking_url": {
+      "title": "Track the pacakge using SAPO",
+      "value": "Track order using SAPO"
+    },
+    "tracking_title": {
+      "title": "The order shipping method",
+      "value": "Shipping Method"
     },
     "error": {
       "message": {
