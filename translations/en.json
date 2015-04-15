@@ -34,6 +34,14 @@
     "value": "Close",
     "title": "Close Window"
   },
+  "customer": {
+    "value": "Customer",
+    "title": "Customer"
+  },
+  "not_found": {
+    "value": "Not Found",
+    "title": "Not found"
+  },
   "profile": {
     "customer_since": {
       "title": "When the customer first became a customer",
@@ -100,6 +108,10 @@
     "status": {
       "title": "The status of the recent orders",
       "value": "STATUS"
+    },
+    "tracking_info": {
+      "title": "Order tracking information",
+      "value": "TRACKING INFO"
     }
   },
   "order": {
@@ -136,28 +148,36 @@
       "value": "Total"
     },
     "tracking_info": {
-      "title": "Package tracking information",
+      "title": "Order tracking information",
       "value": "Tracking information"
     },
-    "tracking_number": {
-      "title": "The package tracking number",
-      "value": "Tracking Number"
+    "lms_tracking_number": {
+      "title": "LMS tracking number",
+      "value": "LMS Tracking #"
     },
-    "additional_tracking_number": {
-      "title": "The package additional tracking number",
-      "value": "Additional Tracking Number"
+    "sapo_tracking_number": {
+      "title": "SAPO tracking number",
+      "value": "SAPO Tracking #"
     },
-    "otd_tracking_url": {
-      "title": "Track the pacakge using OTD",
-      "value": "Track order using OTD"
+    "lms_tracking_url": {
+      "title": "Track order using LMS",
+      "value": "Track order using LMS"
     },
     "sapo_tracking_url": {
-      "title": "Track the pacakge using SAPO",
+      "title": "Track the order using SAPO",
       "value": "Track order using SAPO"
     },
     "tracking_title": {
-      "title": "The order shipping method",
+      "title": "Order shipping method",
       "value": "Shipping Method"
+    },
+    "payment_method": {
+      "title": "Order payment method",
+      "value": "Payment Method"
+    },
+    "comments": {
+      "title": "Order status comments",
+      "value": "Comments"
     },
     "error": {
       "message": {

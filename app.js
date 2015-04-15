@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
   'use_strict';
 
@@ -9,34 +9,41 @@
     magentoApiEndpoint: '',
 
     resources: {
-      PROFILE_URI       : '%@/zendesk/api/customers/%@',
-      ORDER_URI         : '%@/zendesk/api/orders/%@'
+      PROFILE_URI: '%@/zendesk/api/customers/%@',
+      ORDER_URI: '%@/zendesk/api/orders/%@'
     },
 
     requests: {
-      'getProfile': function(email)   { return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email)); },
-      'getOrder'  : function(orderId) { return this._getRequest(helpers.fmt(this.resources.ORDER_URI, this.magentoApiEndpoint, orderId)); },
-      'userInfo'  : {
+      'getProfile': function (email) {
+        return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email));
+      },
+      'getOrder': function (orderId) {
+        return this._getRequest(helpers.fmt(this.resources.ORDER_URI, this.magentoApiEndpoint, orderId));
+      },
+      'userInfo': {
         url: '/api/v2/users/me.json'
       }
     },
 
     events: {
-      'app.created'          : 'init',
-      '*.changed'            : 'handleChanged',
-      'getProfile.done'      : 'handleProfile',
-      'getProfile.fail'      : 'handleProfileFail',
-      'getOrder.done'        : 'handleOrder',
-      'getOrder.fail'        : 'handleFail',
-      'click .toggle-address': 'toggleAddress',
-      'userInfo.done'        : 'onUserInfoDone'
+      'app.created'               : 'init',
+      '*.changed'                 : 'handleChanged',
+      'getProfile.done'           : 'handleProfile',
+      'getProfile.fail'           : 'handleProfileFail',
+      'getOrder.done'             : 'handleOrder',
+      'getOrder.fail'             : 'handleFail',
+      'click .toggle-address'     : 'toggleAddress',
+      'click .toggle-comments'    : 'toggleComments',
+      'click .change-order'       : 'handleOrderChanged',
+      'click .popup-window'       : 'openPopup',
+      'userInfo.done'             : 'onUserInfoDone'
     },
 
-    onUserInfoDone: function(data) {
+    onUserInfoDone: function (data) {
       this.locale = data.user.locale;
     },
 
-    localizeDate: function(date, params) {
+    localizeDate: function (date, params) {
       if (!date) {
         return date;
       }
@@ -58,7 +65,7 @@
       return dateObj.toLocaleDateString(this.locale, options);
     },
 
-    handleChanged:  _.debounce(function(e) {
+    handleChanged: _.debounce(function (e) {
       if (e.propertyName === helpers.fmt("ticket.custom_field_%@", this.settings.order_id_field_id)) {
         this.orderId = e.newValue;
         if (this.profileData) {
@@ -71,7 +78,16 @@
       }
     }, 500),
 
-    handleProfile: function(data) {
+    handleOrderChanged: function (e) {
+      this.orderId = String(this.$(e.target).data("value"));
+
+      if (this.profileData) {
+        this._appendTicketOrder();
+      }
+      return false;
+    },
+
+    handleProfile: function (data) {
       var ordersLength = 0;
 
       // Check that the response was successful
@@ -92,12 +108,15 @@
 
       // See if we should show all orders or only recent orders.
       ordersLength = this.profileData.orders.length;
-      if ( ordersLength > 3 ) {
-        this.profileData.recentOrders = this.profileData.orders.slice(ordersLength-3, ordersLength).reverse();
+      if (ordersLength > 3) {
+        this.profileData.recentOrders = this.profileData.orders.slice(ordersLength - 3, ordersLength).reverse();
       } else {
         this.profileData.recentOrders = this.profileData.orders.reverse();
       }
 
+      if (_.isEmpty(this.orderId) === true) {
+        this.orderId = this.profileData.recentOrders[0].id;
+      }
       // Got the profile data, populate interface
       this.profileData.created = this.localizeDate(this.profileData.created);
       this.switchTo('profile', this.profileData);
@@ -105,21 +124,21 @@
       this._appendTicketOrder();
     },
 
-    handleOrder: function(data) {
+    handleOrder: function (data) {
       // Check that the response was successfuly
       if (_.isEmpty(data.id)) {
         this.showError(this.I18n.t('global.error.title'), data.message || this.I18n.t('order.error.message'));
         return;
       }
 
-      this.switchTo('order', { order: data });
+      this.switchTo('order', {order: data});
     },
 
-    handleFail: function() {
+    handleFail: function () {
       this.showError(this.I18n.t('global.error.title'), this.I18n.t('global.error.server'));
     },
 
-    handleProfileFail: function(resp) {
+    handleProfileFail: function (resp) {
       if (resp.status === 404) {
         // Allow failures if there's an order to be fetched
         if (_.isEmpty(this.orderId) === false) {
@@ -132,8 +151,8 @@
       }
     },
 
-    init: function(data){
-      this.ajax('userInfo').done(function() {
+    init: function (data) {
+      this.ajax('userInfo').done(function () {
         this.magentoApiEndpoint = this._checkMagentoApiEndpoint(this.settings.url);
 
         // Get order id field
@@ -141,21 +160,23 @@
           this.orderId = this.ticket().customField('custom_field_' + this.settings.order_id_field_id);
         }
 
-        if (this.currentLocation() === 'ticket_sidebar') { this.queryCustomer(); }
+        if (this.currentLocation() === 'ticket_sidebar') {
+          this.queryCustomer();
+        }
       }.bind(this));
     },
 
-    queryCustomer: function(){
+    queryCustomer: function () {
       this.switchTo('requesting');
       this.ajax('getProfile', this.ticket().requester().email());
     },
 
-    queryOrder: function() {
+    queryOrder: function () {
       this.switchTo('requesting');
       this.ajax('getOrder', this.orderId);
     },
 
-    showError: function(title, msg) {
+    showError: function (title, msg) {
       this.switchTo('error', {
         title: title || this.I18n.t('global.error.title'),
         message: msg || this.I18n.t('global.error.message')
@@ -167,53 +188,83 @@
       return false;
     },
 
+    toggleComments: function (e) {
+      this.$(e.target).parent().next('div').toggleClass('hide');
+      return false;
+    },
+
+    openPopup: function (e) {
+      var me = this.$(e.target);
+
+      var w = me.data('width');
+      var h = me.data('height');
+      var title = me.data('title');
+      var url = me.attr('href');
+
+      var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+      var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+
+      var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+      var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+      var top = ((height / 2) - (h / 2)) + dualScreenTop;
+      var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+
+      // Puts focus on the newWindow
+      if (window.focus) {
+        newWindow.focus();
+      }
+    },
+
     // Helpers
-    _checkMagentoApiEndpoint: function(url) {
+    _checkMagentoApiEndpoint: function (url) {
       // First, lets make sure there is no trailing slash, we'll add one later.
-      if (url.slice(-1) === '/') { url = url.slice(0, -1); }
+      if (url.slice(-1) === '/') {
+        url = url.slice(0, -1);
+      }
       // Test whether we have a front-controller reference here.
-      if (url.indexOf('index.php') === -1)
-      {
-        return url+'/index.php';
+      if (url.indexOf('index.php') === -1) {
+        return url + '/index.php';
       }
       return url;
     },
 
     // Format the line breaks for web
-    _cleanupLineBreaks: function(toBeCleaned) {
+    _cleanupLineBreaks: function (toBeCleaned) {
       var cleaned = toBeCleaned;
-      _.each(cleaned, function(value, key) {
+      _.each(cleaned, function (value, key) {
         cleaned[key] = _.escape(value).replace(/\n/g, '<br>');
       });
       return cleaned;
     },
 
-    _getRequest: function(resource) {
+    _getRequest: function (resource) {
       return {
-        headers  : {
-          'Authorization': 'Token token="'+this.settings.access_token+'"'
+        headers: {
+          'Authorization': 'Token token="' + this.settings.access_token + '"'
         },
-        url      : resource,
-        method   : 'GET',
-        dataType : 'json'
+        url: resource,
+        method: 'GET',
+        dataType: 'json'
       };
     },
 
-    _appendTicketOrder: function(){
+    _appendTicketOrder: function () {
       var orderId = this.orderId,
-          orderTemplate = "";
+        orderTemplate = "";
 
       // If there is an order ID custom field setup, look to see if the order ID exists in the profile data
       if (orderId) {
         orderTemplate += "<hr />";
 
-        this.profileData.ticketOrder = _.find(this.profileData.orders, function(order){
+        this.profileData.ticketOrder = _.find(this.profileData.orders, function (order) {
           return (order.id === orderId);
         });
 
         if (this.profileData.ticketOrder) {
           this.profileData.ticketOrder.store = this.profileData.ticketOrder.store.replace(/\n/g, '<br>');
-          this.profileData.ticketOrder.created = this.localizeDate(this.profileData.ticketOrder.created);
+          //this.profileData.ticketOrder.created = this.localizeDate(this.profileData.ticketOrder.created);
           orderTemplate += this.renderTemplate('order', {
             order: this.profileData.ticketOrder
           });

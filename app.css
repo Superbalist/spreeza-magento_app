@@ -22,6 +22,19 @@ table {
 h5 {
 	margin-top: 9px;
 }
-.modal{
-    width: 700px;
+
+.table-borderless {
+    margin: 5px 0 9px;
+}
+
+.table-borderless td {
+    padding-top: 5px;
+    padding-right: 20px;
+    line-height: 18px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.order-comments {
+    padding-bottom: 10px;
 }
