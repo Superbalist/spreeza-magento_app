@@ -6,7 +6,7 @@
 
   "location": ["ticket_sidebar", "new_ticket_sidebar"],
   "defaultLocale": "en",
-  "private": false,
+  "private": true,
   "singleInstall": false,
   "frameworkVersion": "1.0",
   "version": "1.1.1",
@@ -26,6 +26,12 @@
       "name": "order_id_field_id",
       "type": "number",
       "required": false
+    },
+    {
+      "name": "number_of_recent_orders",
+      "type": "number",
+      "required": false,
+      "default": 3
     }
   ]
 }

@@ -9,13 +9,13 @@
     magentoApiEndpoint: '',
 
     resources: {
-      PROFILE_URI: '%@/zendesk/api/customers/%@',
+      PROFILE_URI: '%@/zendesk/api/customers/%@/%@',
       ORDER_URI: '%@/zendesk/api/orders/%@'
     },
 
     requests: {
-      'getProfile': function (email) {
-        return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email));
+      'getProfile': function (email, numRecentOrders) {
+        return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email, numRecentOrders));
       },
       'getOrder': function (orderId) {
         return this._getRequest(helpers.fmt(this.resources.ORDER_URI, this.magentoApiEndpoint, orderId));
@@ -26,16 +26,16 @@
     },
 
     events: {
-      'app.created'               : 'init',
-      '*.changed'                 : 'handleChanged',
-      'getProfile.done'           : 'handleProfile',
-      'getProfile.fail'           : 'handleProfileFail',
-      'getOrder.done'             : 'handleOrder',
-      'getOrder.fail'             : 'handleFail',
-      'click .toggle-address'     : 'toggleAddress',
-      'click .toggle-comments'    : 'toggleComments',
-      'click .change-order'       : 'handleOrderChanged',
-      'userInfo.done'             : 'onUserInfoDone'
+      'app.created'             : 'init',
+      '*.changed'               : 'handleChanged',
+      'getProfile.done'         : 'handleProfile',
+      'getProfile.fail'         : 'handleProfileFail',
+      'getOrder.done'           : 'handleOrder',
+      'getOrder.fail'           : 'handleFail',
+      'click .toggle-div'       : 'toggleDiv',
+      'click .change-order'     : 'handleOrderChanged',
+      'click .change-rma'       : 'handleRmaChanged',
+      'userInfo.done'           : 'onUserInfoDone'
     },
 
     onUserInfoDone: function (data) {
@@ -86,6 +86,15 @@
       return false;
     },
 
+    handleRmaChanged: function (e) {
+      this.rmaId = String(this.$(e.target).data("value"));
+
+      if (this.profileData.ticketOrder.productReturns) {
+        this._appendTicketOrderRma();
+      }
+      return false;
+    },
+
     handleProfile: function (data) {
       var ordersLength = 0;
 
@@ -106,18 +115,20 @@
       this.profileData.addresses = this._cleanupLineBreaks(this.profileData.addresses);
 
       // See if we should show all orders or only recent orders.
+      /*
       ordersLength = this.profileData.orders.length;
       if (ordersLength > 3) {
         this.profileData.recentOrders = this.profileData.orders.slice(ordersLength - 3, ordersLength).reverse();
       } else {
         this.profileData.recentOrders = this.profileData.orders.reverse();
-      }
+      }*/
 
+      this.profileData.recentOrders = this.profileData.orders;
       if (_.isEmpty(this.orderId) === true) {
         this.orderId = this.profileData.recentOrders[0].id;
       }
       // Got the profile data, populate interface
-      this.profileData.created = this.localizeDate(this.profileData.created);
+      //this.profileData.created = this.localizeDate(this.profileData.created);
       this.switchTo('profile', this.profileData);
 
       this._appendTicketOrder();
@@ -167,7 +178,7 @@
 
     queryCustomer: function () {
       this.switchTo('requesting');
-      this.ajax('getProfile', this.ticket().requester().email());
+      this.ajax('getProfile', this.ticket().requester().email(), this.settings.number_of_recent_orders);
     },
 
     queryOrder: function () {
@@ -182,13 +193,20 @@
       });
     },
 
-    toggleAddress: function (e) {
-      this.$(e.target).parent().next('p').toggleClass('hide');
-      return false;
-    },
+    toggleDiv: function (e) {
+      var me = this.$(e.target);
+      var i = me.find('i');
 
-    toggleComments: function (e) {
-      this.$(e.target).parent().next('div').toggleClass('hide');
+      me.parent().next('div').toggleClass('hide');
+
+
+      if (i.attr('class') == 'icon-chevron-down') {
+        i.removeClass('icon-chevron-down');
+        i.addClass('icon-chevron-up');
+      } else {
+        i.removeClass('icon-chevron-up');
+        i.addClass('icon-chevron-down');
+      }
       return false;
     },
 
@@ -209,7 +227,7 @@
     _cleanupLineBreaks: function (toBeCleaned) {
       var cleaned = toBeCleaned;
       _.each(cleaned, function (value, key) {
-        cleaned[key] = _.escape(value).replace(/\n/g, '<br>');
+        cleaned[key] = _.escape(value).replace(/(\n)+/g, '<br>');
       });
       return cleaned;
     },
@@ -252,6 +270,32 @@
       }
 
       this.$('.order').html(orderTemplate);
+    },
+
+    _appendTicketOrderRma: function () {
+      var rmaId = this.rmaId,
+        rmaTemplate = "";
+
+      if (rmaId) {
+        rmaTemplate += "<hr />";
+
+        var selectedRma = _.find(this.profileData.ticketOrder.productReturns, function (rma) {
+          return (rma.rma_id === rmaId);
+        });
+
+        if (selectedRma) {
+          rmaTemplate += this.renderTemplate('rma', {
+            rma: selectedRma
+          });
+        } else {
+          rmaTemplate += this.renderTemplate('error', {
+            title: this.I18n.t('global.error.title'),
+            message: this.I18n.t('order.rma.error.message')
+          });
+        }
+      }
+
+      this.$('.rma').html(rmaTemplate);
     }
 
   };

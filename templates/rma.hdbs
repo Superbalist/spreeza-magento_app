@@ -1,0 +1,116 @@
+{{#with rma}}
+<table class="table-borderless">
+    <tr>
+        <td>
+            <h5>{{t "order.rma.rma_ref"}}</h5>
+            <p><a target="_blank" href="{{rma.admin_url}}">{{rma_ref}} <i class="icon-share"></i></a></p>
+        </td>
+        <td>
+            <h5>{{t "order.rma.status"}}</h5>
+            <p><span class="badge badge-{{rma_status_sanitised}}">{{rma_status}}</span></p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.rma.created_at"}}</h5>
+            <p>{{rma_created_at}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.rma.expires_at"}}</h5>
+            <p>
+                {{#if rma_expire_date}}
+                    {{rma_expire_date}}
+                {{else}}
+                    N/A
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.rma.collection_method"}}</h5>
+            <p>{{rma_collection_method}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.rma.collection_status"}}</h5>
+            <p>{{rma_collection_status}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.rma.refund_option"}}</h5>
+            <p>{{refund_option}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.rma.return_date"}}</h5>
+            <p>
+                {{#if rma_return_date}}
+                    {{rma_return_date}}
+                {{else}}
+                    {{t "none"}}
+                {{/if}}
+            </p>
+        </td>
+        <td>
+            <h5>{{t "order.rma.pickup_date"}}</h5>
+            <p>
+            {{#if rd_pickup_date}}
+                {{rd_pickup_date}}
+            {{else}}
+                {{t "none"}}
+            {{/if}}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.rma.reception_date"}}</h5>
+            <p>
+                {{#if rma_reception_date}}
+                    {{rma_reception_date}}
+                {{else}}
+                    {{t "none"}}
+                {{/if}}
+            </p>
+        </td>
+        <td>
+            <h5>{{t "order.rma.qc_completed_date"}}</h5>
+            <p>
+                {{#if rd_qc_completed}}
+                    {{rd_qc_completed}}
+                {{else}}
+                    {{t "none"}}
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.rma.finance_completed_date"}}</h5>
+            <p>
+                {{#if rd_finance_completed}}
+                    {{rd_finance_completed}}
+                {{else}}
+                    {{t "none"}}
+                {{/if}}
+            </p>
+        </td>
+        <td>
+            <h5>{{t "order.rma.swap_out_completed_date"}}</h5>
+            <p>
+                {{#if rd_return_completed}}
+                    {{rd_return_completed}}
+                {{else}}
+                    {{t "none"}}
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+</table>
+{{/with}}

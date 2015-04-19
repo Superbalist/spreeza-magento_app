@@ -1,92 +1,112 @@
 <div>
 
-  <h4>
-    <a href="{{admin_url}}" target="_blank">{{name}}</a>
-    {{#if guest}}
-    <span>{{t "profile.guest"}}</span>
+    <h4>
+        <a href="{{admin_url}}" target="_blank" class="uppercase">{{name}} <i class="icon-share"></i></a>
+        {{#if guest}}
+        <span>{{t "profile.guest"}}</span>
+        {{/if}}
+    </h4>
+
+    {{#if recentOrders}}
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th>{{t "orders.id"}}</th>
+            <th>{{ t "orders.tracking_info" }}
+            <th>{{t "orders.status"}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#recentOrders}}
+        <tr class="_tooltip" data-title="{{titles}}" data-placement="top">
+            <!--<td><a href="{{admin_url}}" target="_blank">#{{id}}</td>-->
+            <td><a href="#" data-value="{{id}}" class="change-order">#{{id}} <i class="icon-arrow-down"></i></a></td>
+            <td>
+                <p>
+                    {{#if tracking_info}}
+                    <a href="{{tracking_info.lms_tracking_url}}"
+                       onclick="PopupCenter('{{tracking_info.lms_tracking_url}}','xtf','900','500'); return false;">LMS
+                        <i class="icon-share"></i></a>
+                    {{#if tracking_info.sapo_tracking_url}}
+                    &nbsp;|&nbsp;<a href="{{tracking_info.sapo_tracking_url}}"
+                                    onclick="PopupCenter('{{tracking_info.sapo_tracking_url}}','xtf','900','500'); return false;">PO
+                    <i class="icon-share"></i></a>
+                    {{/if}}
+                    {{else}}
+                    {{t "not_found"}}
+                    {{/if}}
+                </p>
+            </td>
+            <td><span class="badge badge-{{state}}">{{status}}</span></td>
+        </tr>
+        {{/recentOrders}}
+        </tbody>
+    </table>
     {{/if}}
-  </h4>
 
-  {{#if recentOrders}}
-  <table class="table table-condensed">
-    <thead>
-      <tr>
-        <th>{{t "orders.id"}}</th>
-        <th>{{ t "orders.tracking_info" }}
-        <th>{{t "orders.status"}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#recentOrders}}
-      <tr class="_tooltip" data-title="{{titles}}" data-placement="top">
-        <!--<td><a href="{{admin_url}}" target="_blank">#{{id}}</td>-->
-        <td><a href="#" data-value="{{id}}" class="change-order">#{{id}}</td>
-        <td>
-            <p>
-             {{#if tracking_info}}
-                <a href="{{tracking_info.lms_tracking_url}}" onclick="PopupCenter('{{tracking_info.lms_tracking_url}}','xtf','900','500'); return false;">LMS</a>
-                {{#if tracking_info.sapo_tracking_url}}
-                &nbsp;|&nbsp;<a href="{{tracking_info.sapo_tracking_url}}" onclick="PopupCenter('{{tracking_info.sapo_tracking_url}}','xtf','900','500'); return false;">PO</a>
-                {{/if}}
-             {{else}}
-                {{t "not_found"}}
-             {{/if}}
-            </p>
-        </td>
-        <td><span class="badge badge-{{status}}">{{status}}</a></td>
-      </tr>
-      {{/recentOrders}}
-    </tbody>
-  </table>
-  {{/if}}
+    <div class="magento-address">
+        <h5>{{t "profile.addresses"}}</h5>
 
-  <div class="magento-address">
-    <h5>{{t "profile.addresses"}}</h5>
+        <h6><a href="#" class="toggle-div">{{t "profile.billing"}} <i class="icon-chevron-down"></i></a></h6>
 
-    <h6><a href="#" class="toggle-address">{{t "profile.billing"}}</a></h6>
-    <p class="hide">
-      {{#if addresses.billing}}
-        {{{addresses.billing}}}
-      {{else}}
-        {{t "order.error.no_address"}}
-      {{/if}}
-    </p>
+        <div class="hide">
+            {{#if addresses.billing}}
+            <address>{{{addresses.billing}}}</address>
+            {{else}}
+            <address>{{t "order.error.no_address"}}</address>
+            {{/if}}
+        </div>
 
-    <h6><a href="#" class="toggle-address">{{t "profile.shipping"}}</a></h6>
-    <p class="hide">
-      {{#if addresses.shipping}}
-        {{{addresses.shipping}}}
-      {{else}}
-        {{t "order.error.no_address"}}
-      {{/if}}
-    </p>
-  </div>
+        <h6><a href="#" class="toggle-div">{{t "profile.shipping"}} <i class="icon-chevron-down"></i></a></h6>
 
-  <h5>{{t "profile.customer_since"}}</h5>
-  <p>{{created}}</p>
+        <div class="hide">
+            {{#if addresses.shipping}}
+            <address>{{{addresses.shipping}}}</address>
+            {{else}}
+            <address>{{t "order.error.no_address"}}</address>
+            {{/if}}
+        </div>
+    </div>
 
-  <div class="order"></div>
+    <h5>{{t "profile.customer_since"}}</h5>
+    <p>{{created}}</p>
+
+    <h5>{{t "profile.customer_group"}}</h5>
+    <p>{{group}}</p>
+
+    {{#if lifetime_sales}}
+    {{#with lifetime_sales}}
+    <h5>{{t "profile.lifetime_num_orders"}}</h5>
+    <p>{{num_orders}}</p>
+    <h5>{{t "profile.lifetime_sales_total"}}</h5>
+    <p>{{lifetime}}</p>
+    <h5>{{t "profile.lifetime_sales_average"}}</h5>
+    <p>{{avgsale}}</p>
+    {{/with}}
+    {{/if}}
+
+    <div class="order"></div>
 
 </div>
 
 <script language="javascript" type="text/javascript">
-<!--
-function PopupCenter(url, title, w, h) {
-    // Fixes dual-screen position                         Most browsers      Firefox
-    var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
-    var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+    <!--
+    function PopupCenter(url, title, w, h) {
+        // Fixes dual-screen position                         Most browsers      Firefox
+        var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+        var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
 
-    width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+        width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+        height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-    var left = ((width / 2) - (w / 2)) + dualScreenLeft;
-    var top = ((height / 2) - (h / 2)) + dualScreenTop;
-    var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+        var left = ((width / 2) - (w / 2)) + dualScreenLeft;
+        var top = ((height / 2) - (h / 2)) + dualScreenTop;
+        var newWindow = window.open(url, title, 'scrollbars=yes, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
 
-    // Puts focus on the newWindow
-    if (window.focus) {
-        newWindow.focus();
+        // Puts focus on the newWindow
+        if (window.focus) {
+            newWindow.focus();
+        }
     }
-}
-// -->
+    // -->
 </script>

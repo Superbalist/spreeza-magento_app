@@ -1,62 +1,142 @@
-<h4>{{t "order.details"}} <a target="_blank" href="{{order.admin_url}}">{{order.id}}</a></h4>
+{{#with order}}
+<h4 class="uppercase">{{t "order.details"}} <a target="_blank" href="{{admin_url}}">{{id}} <i class="icon-share"></i></a></h4>
 
 <table class="table-borderless">
     <tr>
         <td>
             <h5>{{t "order.created"}}</h5>
-            <p>{{order.created}}</p>
+            <p>{{created}}</p>
         </td>
         <td>
             <h5>{{t "order.status"}}</h5>
-            <p><span class="badge badge-{{order.status}}">{{order.status}}</span></p>
+            <p><span class="badge badge-{{state}}">{{status}}</span></p>
+        </td>
+    </tr>
+    {{#if shipping_method}}
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.shipping_method"}}</h5>
+            <p>{{shipping_method}}</p>
+        </td>
+    </tr>
+    {{/if}}
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.payment_method"}}</h5>
+            <p>{{paymentInfo.method}}{{#if paymentInfo.cc_type}}:&nbsp;{{paymentInfo.cc_type}}{{/if}}</p>
+        </td>
+    </tr>
+</table>
+
+<h5 class="section-heading"><i class="icon-briefcase"></i> {{t "order.totals"}}</h5>
+<table class="table-borderless">
+    <tr>
+        <td>
+            <h5>{{t "order.subtotal"}}</h5>
+            <p>{{totals.subtotal}}</p>
+        </td>
+        <td>
+            <h5>{{t "order.shipping_handling"}}</h5>
+            <p>{{totals.shipping}}</p>
         </td>
     </tr>
     <tr>
         <td>
-            <h5>{{t "order.payment_method"}}</h5>
-            <p>{{order.payment_info.method}}{{#if order.payment_info.cc_type}}:&nbsp;{{order.payment_info.cc_type}}{{/if}}</p>
+            <h5>{{t "order.discount"}}</h5>
+            <p>{{totals.discount}}</p>
         </td>
         <td>
-            <h5>{{t "order.total"}}</h5>
-            <p>{{order.total}}</p>
-          </td>
-        </tr>
+            <h5>{{t "order.total_tax"}}</h5>
+            <p>{{totals.total_tax}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.grand_total"}}</h5>
+            <p>{{totals.grand_total}}</p>
+        </td>
+        <td>
+            <h5>{{t "order.total_paid"}}</h5>
+            <p>{{totals.total_paid}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.total_refunded"}}</h5>
+            <p>{{totals.total_refunded}}</p>
+        </td>
+        <td>
+            <h5>{{t "order.total_due"}}</h5>
+            <p>{{totals.total_due}}</p>
+        </td>
+    </tr>
 </table>
 
+{{#if trackingInfo}}
+<h5 class="section-heading"><i class="icon-road"></i> {{t "order.tracking_info"}}</h5>
+<table class="table-borderless">
+    <tr>
+        <td colspan="2">
+            <h5>{{t "order.shipping_method"}}</h5>
+            <p>{{trackingInfo.title}}</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h5>{{t "order.lms_tracking_number"}}</h5>
+            <p><a href="{{tracking_info.lms_tracking_url}}" onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.number}}  <i class="icon-share"></i></a></p>
+        </td>
+        <td>
+            {{#if trackingInfo.sapo_tracking_url}}
+            <h5>{{t "order.sapo_tracking_number"}}</h5>
+            <p><a href="{{trackingInfo.sapo_tracking_url}}" onclick="PopupCenter('{{trackingInfo.sapo_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.sapo_track_number}}  <i class="icon-share"></i></a></p>
+            {{/if}}
+        </td>
+    </tr>
+</table>
+{{/if}}
+
+{{#if productReturns}}
+<h5 class="section-heading"> <i class="icon-circle-arrow-left"></i> {{t "order.returns_info"}}</h5>
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>{{t "order.rma.rma_ref"}}</th>
+            <th>{{t "order.rma.status"}}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#productReturns}}
+        <tr class="_tooltip" data-placement="top">
+            <td><a href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}} <i class="icon-arrow-down"></i></a></td>
+            <td><span class="badge badge-{{rma_status_sanitised}}">{{rma_status}}</span></td>
+        </tr>
+    {{/productReturns}}
+    </tbody>
+</table>
+<div class="rma"></div>
+{{/if}}
+
+{{#if comments}}
+<hr/>
 <div class="order-comments">
-    {{#if order.comments}}
-    <h5><a href="#" class="toggle-comments">{{t "order.comments"}}</a></h5>
+    <h5><a href="#" class="toggle-div uppercase">{{t "order.comments"}} <i class="icon-chevron-down"></i></a></h5>
     <div class="hide">
         <table class="table table-condensed">
             <tbody>
-            {{#order.comments}}
-                <tr>
-                    <td>
-                        <p><strong>{{date}}</strong> {{time}} | <strong>{{status}}</strong></p>
-                        <p>{{t "customer"}} <small><strong>{{customer_notified}}</strong></small></p>
-                        <p>{{comment}}</p>
-                    </td>
-                </tr>
-            {{/order.comments}}
+            {{#comments}}
+            <tr>
+                <td>
+                    <p><strong>{{date}}</strong> {{time}} | <strong>{{status}}</strong></p>
+                    <p>{{t "customer"}} <small><strong>{{customer_notified}}</strong></small></p>
+                    <p><small><i>{{comment}}</i></small></p>
+                </td>
+            </tr>
+            {{/comments}}
             </tbody>
         </table>
     </div>
-    {{/if}}
-</div>
-
-{{#if order.tracking_info}}
-<div class="tracking-info">
-    <h4>{{t "order.tracking_info"}}</h4>
-    <h5>{{t "order.tracking_title"}}</h5>
-    <p>{{order.tracking_info.title}}</p>
-
-    <h5>{{t "order.lms_tracking_number"}}</h5>
-    <p><a href="{{order.tracking_info.lms_tracking_url}}" onclick="PopupCenter('{{order.tracking_info.lms_tracking_url}}','xtf','900','500'); return false;">{{order.tracking_info.number}}</a></p>
-
-    {{#if order.tracking_info.sapo_tracking_url}}
-    <h5>{{t "order.sapo_tracking_number"}}</h5>
-    <p><a href="{{order.tracking_info.sapo_tracking_url}}" onclick="PopupCenter('{{order.tracking_info.sapo_tracking_url}}','xtf','900','500'); return false;">{{order.tracking_info.sapo_track_number}}</a></p>
-    {{/if}}
 </div>
 {{/if}}
+{{/with}}
 
