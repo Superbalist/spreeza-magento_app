@@ -23,13 +23,13 @@
             <td><a href="#" data-value="{{id}}" class="change-order">#{{id}} <i class="icon-arrow-down"></i></a></td>
             <td>
                 <p>
-                    {{#if tracking_info}}
+                    {{#if trackingInfo}}
                     <a href="{{tracking_info.lms_tracking_url}}"
-                       onclick="PopupCenter('{{tracking_info.lms_tracking_url}}','xtf','900','500'); return false;">LMS
+                       onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">LMS
                         <i class="icon-share"></i></a>
-                    {{#if tracking_info.sapo_tracking_url}}
-                    &nbsp;|&nbsp;<a href="{{tracking_info.sapo_tracking_url}}"
-                                    onclick="PopupCenter('{{tracking_info.sapo_tracking_url}}','xtf','900','500'); return false;">PO
+                    {{#if trackingInfo.sapo_tracking_url}}
+                    &nbsp;|&nbsp;<a href="{{trackingInfo.sapo_tracking_url}}"
+                                    onclick="PopupCenter('{{trackingInfo.sapo_tracking_url}}','xtf','900','500'); return false;">PO
                     <i class="icon-share"></i></a>
                     {{/if}}
                     {{else}}
