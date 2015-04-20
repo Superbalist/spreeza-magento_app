@@ -102,6 +102,7 @@
     <thead>
         <tr>
             <th>{{t "order.rma.rma_ref"}}</th>
+            <th>{{ t "orders.tracking_info" }}
             <th>{{t "order.rma.status"}}</th>
         </tr>
     </thead>
@@ -109,6 +110,14 @@
     {{#productReturns}}
         <tr class="_tooltip" data-placement="top">
             <td><a href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}} <i class="icon-arrow-down"></i></a></td>
+            <td>
+                {{#if lms_tracking_url}}
+                <a href="{{lms_tracking_url}}"
+                                onclick="PopupCenter('{{lms_tracking_url}}','xtf','900','500'); return false;">LMS <i class="icon-share"></i></a>
+                {{else}}
+                {{t "not_found"}}
+                {{/if}}
+            </td>
             <td><span class="badge badge-{{rma_status_sanitised}}">{{rma_status}}</span></td>
         </tr>
     {{/productReturns}}

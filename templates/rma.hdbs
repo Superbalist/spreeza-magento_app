@@ -30,6 +30,19 @@
     </tr>
     <tr>
         <td colspan="2">
+            <h5>{{ t "orders.tracking_info" }}</h5>
+            <p>
+                {{#if lms_tracking_url}}
+                <a href="{{lms_tracking_url}}"
+                   onclick="PopupCenter('{{lms_tracking_url}}','xtf','900','500'); return false;">LMS <i class="icon-share"></i></a>
+                {{else}}
+                {{t "not_found"}}
+                {{/if}}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
             <h5>{{t "order.rma.collection_method"}}</h5>
             <p>{{rma_collection_method}}</p>
         </td>
