@@ -68,22 +68,33 @@
         </div>
     </div>
 
-    <h5>{{t "profile.customer_since"}}</h5>
-    <p>{{created}}</p>
+    <table class="table-borderless">
+        <tr>
+            <td>
+                <h5>{{t "profile.customer_group"}}</h5>
+                <p>{{group}}</p>
+            </td>
+            <td>
+                {{#if lifetime_sales}}
+                <h5>{{t "profile.lifetime_num_orders"}}</h5>
+                <p>{{lifetime_sales.num_orders}}</p>
+                {{/if}}
+            </td>
+        </tr>
+        {{#if lifetime_sales}}
+        <tr>
+            <td>
+                <h5>{{t "profile.lifetime_sales_total"}}</h5>
+                <p>{{lifetime_sales.lifetime}}</p>
+            </td>
+            <td>
 
-    <h5>{{t "profile.customer_group"}}</h5>
-    <p>{{group}}</p>
-
-    {{#if lifetime_sales}}
-    {{#with lifetime_sales}}
-    <h5>{{t "profile.lifetime_num_orders"}}</h5>
-    <p>{{num_orders}}</p>
-    <h5>{{t "profile.lifetime_sales_total"}}</h5>
-    <p>{{lifetime}}</p>
-    <h5>{{t "profile.lifetime_sales_average"}}</h5>
-    <p>{{avgsale}}</p>
-    {{/with}}
-    {{/if}}
+            <h5>{{t "profile.lifetime_sales_average"}}</h5>
+            <p>{{lifetime_sales.avgsale}}</p>
+            </td>
+        </tr>
+        {{/if}}
+    </table>
 
     <div class="order"></div>
 
