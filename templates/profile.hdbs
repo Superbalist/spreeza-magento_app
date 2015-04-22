@@ -75,7 +75,7 @@
             <td>
                 <p>
                     {{#if trackingInfo}}
-                    <a href="{{tracking_info.lms_tracking_url}}"
+                    <a href="{{trackingInfo.lms_tracking_url}}"
                        onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">LMS
                         <i class="icon-share"></i></a>
                     {{#if trackingInfo.sapo_tracking_url}}

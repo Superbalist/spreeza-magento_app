@@ -84,7 +84,7 @@
     <tr>
         <td>
             <h5>{{t "order.lms_tracking_number"}}</h5>
-            <p><a href="{{tracking_info.lms_tracking_url}}" onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.number}}  <i class="icon-share"></i></a></p>
+            <p><a href="{{trackingInfo.lms_tracking_url}}" onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.number}}  <i class="icon-share"></i></a></p>
         </td>
         <td>
             {{#if trackingInfo.sapo_tracking_url}}
