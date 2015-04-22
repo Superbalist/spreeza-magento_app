@@ -30,7 +30,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <h5>{{ t "orders.tracking_info" }}</h5>
+            <h5>{{ t "order.tracking_info" }}</h5>
             <p>
                 {{#if lms_tracking_url}}
                 <a href="{{lms_tracking_url}}"

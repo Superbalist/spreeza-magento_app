@@ -23,7 +23,7 @@ table {
     background-color: #E82A2A;
 }
 .badge-processing, .badge-product-received {
-    background-color: #2d6cb9;
+    background-color: #2D6CB9;
 }
 .badge-holded {
     background-color: #000000;
@@ -53,4 +53,7 @@ h5 {
 }
 .capitalize {
     text-transform: capitalize;
+}
+tr.active {
+    background-color: #F5F5F5;
 }

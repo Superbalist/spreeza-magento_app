@@ -109,7 +109,9 @@
     <tbody>
     {{#productReturns}}
         <tr class="_tooltip" data-placement="top">
-            <td><a href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}} <i class="icon-arrow-down"></i></a></td>
+            <td>
+                <a id="rma-{{id}}" href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}}</a>
+            </td>
             <td>
                 {{#if lms_tracking_url}}
                 <a href="{{lms_tracking_url}}"
