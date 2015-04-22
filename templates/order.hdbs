@@ -84,7 +84,7 @@
     <tr>
         <td>
             <h5>{{t "order.lms_tracking_number"}}</h5>
-            <p><a href="{{tracking_info.lms_tracking_url}}" onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.number}}  <i class="icon-share"></i></a></p>
+            <p><a href="{{trackingInfo.lms_tracking_url}}" onclick="PopupCenter('{{trackingInfo.lms_tracking_url}}','xtf','900','500'); return false;">{{trackingInfo.number}}  <i class="icon-share"></i></a></p>
         </td>
         <td>
             {{#if trackingInfo.sapo_tracking_url}}
@@ -109,7 +109,9 @@
     <tbody>
     {{#productReturns}}
         <tr class="_tooltip" data-placement="top">
-            <td><a href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}} <i class="icon-arrow-down"></i></a></td>
+            <td>
+                <a id="rma-{{id}}" href="#" data-value="{{rma_id}}" class="change-rma">#{{rma_ref}}</a>
+            </td>
             <td>
                 {{#if lms_tracking_url}}
                 <a href="{{lms_tracking_url}}"

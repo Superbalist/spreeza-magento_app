@@ -9,13 +9,13 @@
     magentoApiEndpoint: '',
 
     resources: {
-      PROFILE_URI: '%@/zendesk/api/customers/%@/%@',
+      PROFILE_URI: '%@/zendesk/api/customers/%@/%@/%@',
       ORDER_URI: '%@/zendesk/api/orders/%@'
     },
 
     requests: {
-      'getProfile': function (email, numRecentOrders) {
-        return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email, numRecentOrders));
+      'getProfile': function (email, numRecentOrders, fieldOrderId) {
+        return this._getRequest(helpers.fmt(this.resources.PROFILE_URI, this.magentoApiEndpoint, email, numRecentOrders, fieldOrderId));
       },
       'getOrder': function (orderId) {
         return this._getRequest(helpers.fmt(this.resources.ORDER_URI, this.magentoApiEndpoint, orderId));
@@ -78,21 +78,30 @@
     }, 500),
 
     handleOrderChanged: function (e) {
-      this.orderId = String(this.$(e.target).data("value"));
+      var me = this.$(e.target);
+      this.orderId = String(me.data("value"));
 
       if (this.profileData) {
         this._appendTicketOrder();
+        this.highlightSelectedTr(me);
       }
       return false;
     },
 
     handleRmaChanged: function (e) {
-      this.rmaId = String(this.$(e.target).data("value"));
+      var me = this.$(e.target);
+      this.rmaId = String(me.data("value"));
 
       if (this.profileData.ticketOrder.productReturns) {
         this._appendTicketOrderRma();
+        this.highlightSelectedTr(me);
       }
       return false;
+    },
+
+    highlightSelectedTr: function(target) {
+      target.closest("table").find("tr").removeClass("active");
+      target.closest("tr").addClass("active");
     },
 
     handleProfile: function (data) {
@@ -178,7 +187,7 @@
 
     queryCustomer: function () {
       this.switchTo('requesting');
-      this.ajax('getProfile', this.ticket().requester().email(), this.settings.number_of_recent_orders);
+      this.ajax('getProfile', this.ticket().requester().email(), this.settings.number_of_recent_orders, this.orderId);
     },
 
     queryOrder: function () {
@@ -270,16 +279,21 @@
       }
 
       this.$('.order').html(orderTemplate);
+
+      if (this.profileData.ticketOrder) {
+        this.highlightSelectedTr(this.$('#recent-order-' + this.orderId));
+      }
     },
 
     _appendTicketOrderRma: function () {
       var rmaId = this.rmaId,
+        selectedRma = null,
         rmaTemplate = "";
 
       if (rmaId) {
         rmaTemplate += "<hr />";
 
-        var selectedRma = _.find(this.profileData.ticketOrder.productReturns, function (rma) {
+        selectedRma = _.find(this.profileData.ticketOrder.productReturns, function (rma) {
           return (rma.rma_id === rmaId);
         });
 
@@ -296,6 +310,10 @@
       }
 
       this.$('.rma').html(rmaTemplate);
+
+      if (selectedRma) {
+        this.highlightSelectedTr(this.$('#rma-' + this.rmaId));
+      }
     }
 
   };
