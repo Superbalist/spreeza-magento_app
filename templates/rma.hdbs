@@ -3,7 +3,7 @@
     <tr>
         <td>
             <h5>{{t "order.rma.rma_ref"}}</h5>
-            <p><a target="_blank" href="{{rma.admin_url}}">{{rma_ref}} <i class="icon-share"></i></a></p>
+            <p><a target="_blank" href="{{admin_url}}">{{rma_ref}} <i class="icon-share"></i></a></p>
         </td>
         <td>
             <h5>{{t "order.rma.status"}}</h5>
