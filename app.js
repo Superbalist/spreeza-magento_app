@@ -80,7 +80,6 @@
     handleOrderChanged: function (e) {
       var me = this.$(e.target);
       this.orderId = String(me.data("value"));
-
       if (this.profileData) {
         this._appendTicketOrder();
         this.highlightSelectedTr(me);
@@ -139,7 +138,6 @@
       // Got the profile data, populate interface
       //this.profileData.created = this.localizeDate(this.profileData.created);
       this.switchTo('profile', this.profileData);
-
       this._appendTicketOrder();
     },
 
@@ -249,6 +247,7 @@
         url: resource,
         method: 'GET',
         dataType: 'json'
+        //  ,cors: true // uncomment for dev testing
       };
     },
 
@@ -263,7 +262,6 @@
         this.profileData.ticketOrder = _.find(this.profileData.orders, function (order) {
           return (order.id === orderId);
         });
-
         if (this.profileData.ticketOrder) {
           this.profileData.ticketOrder.store = this.profileData.ticketOrder.store.replace(/\n/g, '<br>');
           //this.profileData.ticketOrder.created = this.localizeDate(this.profileData.ticketOrder.created);
@@ -296,7 +294,6 @@
         selectedRma = _.find(this.profileData.ticketOrder.productReturns, function (rma) {
           return (rma.rma_id === rmaId);
         });
-
         if (selectedRma) {
           rmaTemplate += this.renderTemplate('rma', {
             rma: selectedRma
@@ -315,7 +312,5 @@
         this.highlightSelectedTr(this.$('#rma-' + this.rmaId));
       }
     }
-
   };
-
 }());

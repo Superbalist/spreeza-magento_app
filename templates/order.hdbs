@@ -114,8 +114,8 @@
             </td>
             <td>
                 {{#if lms_tracking_url}}
-                <a href="{{lms_tracking_url}}"
-                                onclick="PopupCenter('{{lms_tracking_url}}','xtf','900','500'); return false;">LMS <i class="icon-share"></i></a>
+                <a href="{{order.lms_tracking_url}}"
+                                onclick="PopupCenter('{{lms_tracking_url}}','xtf','900','500'); return false;">LMS<i class="icon-share"></i></a>
                 {{else}}
                 {{t "not_found"}}
                 {{/if}}
