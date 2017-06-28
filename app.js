@@ -9,8 +9,8 @@
     magentoApiEndpoint: '',
 
     resources: {
-      PROFILE_URI: '%@/zendesk/api/customers/%@/%@/%@',
-      ORDER_URI: '%@/zendesk/api/orders/%@'
+      PROFILE_URI: '%@/en/zendesk/api/customers/%@/%@/%@',
+      ORDER_URI: '%@/en/zendesk/api/orders/%@'
     },
 
     requests: {
